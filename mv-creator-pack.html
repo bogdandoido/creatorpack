@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MV Creator Pack — Tudo que você precisa pra editar. Num só lugar.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #8B5CF6;
+      --blue: #6366F1;
+      --lavender: #A5B4FC;
+      --grad: linear-gradient(135deg, #8B5CF6 0%, #6366F1 60%, #818CF8 100%);
+      --grad-text: linear-gradient(135deg, #C4B5FD 0%, #818CF8 50%, #6366F1 100%);
+      --bg: #080808;
+      --bg2: #0F0F0F;
+      --bg3: #141414;
+      --border: rgba(139,92,246,0.15);
+      --border-hover: rgba(139,92,246,0.4);
+      --text: #F4F4F5;
+      --muted: #71717A;
+      --card-bg: rgba(255,255,255,0.03);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* GLOW BG */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* UTILS */
+    .grad-text {
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--grad);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 36px;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 40px rgba(139,92,246,0.35);
+      letter-spacing: 0.01em;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(139,92,246,0.55);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--lavender);
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 28px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--border-hover); background: rgba(139,92,246,0.08); }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(139,92,246,0.12);
+      border: 1px solid rgba(139,92,246,0.25);
+      color: var(--lavender);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      background: rgba(8,8,8,0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo img { height: 36px; }
+    .nav-logo-text {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo-text span.mv { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .nav-logo-text span.rest { color: #fff; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta .btn-primary { padding: 11px 24px; font-size: 14px; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero .glow-orb.one {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 70%);
+      top: -100px; right: -100px;
+    }
+    .hero .glow-orb.two {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+      bottom: 0; left: -80px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .hero-content { display: flex; flex-direction: column; gap: 28px; }
+
+    .hero-tag { align-self: flex-start; }
+
+    .hero-headline {
+      font-size: clamp(40px, 5vw, 62px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #fff;
+    }
+    .hero-headline .grad-text { display: block; }
+
+    .hero-sub {
+      font-size: 18px;
+      color: #A1A1AA;
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    .hero-ctas { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+
+    .hero-proof {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .hero-proof-avatars {
+      display: flex;
+    }
+    .hero-proof-avatars span {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+      background: var(--grad);
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .hero-proof-avatars span:first-child { margin-left: 0; }
+
+    .hero-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-mockup {
+      width: 100%;
+      max-width: 460px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .hero-mockup::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139,92,246,0.06) 0%, transparent 60%);
+    }
+    .mockup-dots { display: flex; gap: 6px; margin-bottom: 20px; }
+    .mockup-dots span { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-dots span:nth-child(1) { background: #FF5F57; }
+    .mockup-dots span:nth-child(2) { background: #FEBC2E; }
+    .mockup-dots span:nth-child(3) { background: #28C840; }
+    .mockup-title { font-size: 12px; color: var(--muted); margin-bottom: 16px; font-weight: 500; }
+    .mockup-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .mockup-item {
+      border-radius: 8px;
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      background: rgba(255,255,255,0.02);
+      transition: all 0.2s;
+    }
+    .mockup-item:hover { border-color: var(--border-hover); color: var(--lavender); }
+    .mockup-item .icon { font-size: 22px; }
+    .mockup-badge {
+      margin-top: 16px;
+      background: rgba(139,92,246,0.1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mockup-badge-left { font-size: 13px; color: var(--text); font-weight: 600; }
+    .mockup-badge-left span { display: block; font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+    .mockup-badge-right { font-size: 20px; }
+
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+    }
+
+    /* SECTION DEFAULTS */
+    section { position: relative; overflow: hidden; }
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .section-sub {
+      font-size: 17px;
+      color: #A1A1AA;
+      line-height: 1.7;
+      max-width: 580px;
+    }
+
+    /* PAIN */
+    .pain { padding: 100px 0; background: var(--bg2); }
+    .pain-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .pain-story {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      font-size: 15px;
+      line-height: 1.8;
+      color: #A1A1AA;
+      position: relative;
+    }
+    .pain-story::before {
+      content: '"';
+      position: absolute;
+      top: -20px; left: 28px;
+      font-size: 80px;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .pain-story p { margin-bottom: 14px; }
+    .pain-story p:last-child { margin-bottom: 0; }
+    .pain-story strong { color: var(--text); font-weight: 600; }
+    .pain-highlight {
+      background: rgba(139,92,246,0.08);
+      border-left: 3px solid var(--purple);
+      border-radius: 4px;
+      padding: 16px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--lavender);
+      margin-top: 24px;
+    }
+
+    @media (max-width: 768px) { .pain-inner { grid-template-columns: 1fr; } }
+
+    /* SOLUTION */
+    .solution { padding: 100px 0; }
+    .solution .glow-orb {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+    }
+    .solution-inner { text-align: center; max-width: 720px; margin: 0 auto; }
+    .solution-inner .section-sub { margin: 0 auto; }
+    .solution-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 60px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--border-hover); }
+    .stat-num {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { font-size: 14px; color: var(--muted); margin-top: 4px; font-weight: 500; }
+
+    @media (max-width: 600px) { .solution-stats { grid-template-columns: 1fr; } }
+
+    /* INSIDE */
+    .inside { padding: 100px 0; background: var(--bg2); }
+    .inside-header { text-align: center; margin-bottom: 60px; }
+    .inside-header .section-sub { margin: 0 auto; }
+    .inside-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    .asset-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      position: relative;
+      transition: all 0.3s;
+      overflow: hidden;
+    }
+    .asset-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(139,92,246,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .asset-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    .asset-card:hover::before { opacity: 1; }
+
+    .asset-icon { font-size: 36px; margin-bottom: 16px; }
+    .asset-qty {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: rgba(139,92,246,0.1);
+      border: 1px solid rgba(139,92,246,0.2);
+      padding: 4px 10px;
+      border-radius: 100px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+    .asset-name {
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .asset-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; }
+    .asset-value {
+      font-size: 12px;
+      color: #52525B;
+      font-weight: 500;
+    }
+    .asset-value span { color: var(--muted); }
+
+    @media (max-width: 900px) { .inside-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .inside-grid { grid-template-columns: 1fr; } }
+
+    /* VALUE STACK */
+    .value { padding: 100px 0; }
+    .value-inner { max-width: 640px; margin: 0 auto; text-align: center; }
+    .value-table {
+      margin-top: 48px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .value-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 15px;
+    }
+    .value-row:last-child { border-bottom: none; }
+    .value-row .item { color: #A1A1AA; display: flex; align-items: center; gap: 10px; }
+    .value-row .item span { font-size: 18px; }
+    .value-row .price { color: var(--muted); font-weight: 600; text-decoration: line-through; font-size: 14px; }
+    .value-total {
+      background: rgba(139,92,246,0.08);
+      border-top: 1px solid var(--border) !important;
+    }
+    .value-total .item { color: var(--text); font-weight: 700; font-size: 16px; }
+    .value-total .price { text-decoration: none; color: var(--muted); }
+    .value-final {
+      background: var(--grad);
+      border-top: none !important;
+    }
+    .value-final .item { color: #fff; font-weight: 800; font-size: 17px; }
+    .value-final .price { text-decoration: none; color: #fff; font-size: 22px; font-weight: 900; }
+
+    /* BONUS */
+    .bonus { padding: 100px 0; background: var(--bg2); position: relative; }
+    .bonus .glow-orb {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+    }
+    .bonus-inner { max-width: 800px; margin: 0 auto; text-align: center; }
+    .bonus-card {
+      margin-top: 48px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .bonus-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--grad);
+    }
+    .bonus-items { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 36px 0; text-align: left; }
+    .bonus-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px;
+      background: rgba(139,92,246,0.05);
+      border: 1px solid rgba(139,92,246,0.12);
+      border-radius: 14px;
+    }
+    .bonus-item-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+    .bonus-item-text strong { font-size: 15px; color: #fff; font-weight: 700; display: block; margin-bottom: 4px; }
+    .bonus-item-text p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .bonus-secret {
+      background: rgba(139,92,246,0.08);
+      border: 1px dashed rgba(139,92,246,0.3);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+    }
+    .bonus-secret-icon { font-size: 28px; flex-shrink: 0; }
+    .bonus-secret-text strong { font-size: 15px; color: var(--lavender); font-weight: 700; display: block; margin-bottom: 4px; }
+    .bonus-secret-text p { font-size: 13px; color: var(--muted); }
+
+    @media (max-width: 600px) { .bonus-items { grid-template-columns: 1fr; } .bonus-card { padding: 28px 20px; } }
+
+    /* COMPAT */
+    .compat { padding: 80px 0; }
+    .compat-inner { text-align: center; }
+    .compat-label { font-size: 13px; color: var(--muted); margin-bottom: 36px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; }
+    .compat-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .compat-logo {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+    .compat-logo:hover { border-color: var(--border-hover); color: var(--lavender); }
+
+    /* CREATOR */
+    .creator { padding: 100px 0; background: var(--bg2); }
+    .creator-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .creator-avatar {
+      width: 280px;
+      height: 280px;
+      border-radius: 24px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .creator-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 60%;
+      background: linear-gradient(to top, rgba(139,92,246,0.15), transparent);
+    }
+    .creator-name { font-size: 28px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .creator-role { font-size: 14px; color: var(--purple); font-weight: 600; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .creator-bio { font-size: 16px; color: #A1A1AA; line-height: 1.8; margin-bottom: 24px; }
+    .creator-brands {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .creator-brand {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    @media (max-width: 768px) { .creator-inner { grid-template-columns: 1fr; } }
+
+    /* TESTIMONIALS */
+    .testimonials { padding: 100px 0; }
+    .testimonials-header { text-align: center; margin-bottom: 60px; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .testi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+    .testi-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+    .testi-stars { color: #FBBF24; font-size: 14px; margin-bottom: 14px; letter-spacing: 2px; }
+    .testi-text { font-size: 15px; color: #A1A1AA; line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+    .testi-text strong { color: var(--text); font-style: normal; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--grad);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .testi-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .testi-role { font-size: 12px; color: var(--muted); }
+
+    @media (max-width: 900px) { .testi-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .testi-grid { grid-template-columns: 1fr; } }
+
+    /* OFFER */
+    .offer { padding: 100px 0; background: var(--bg2); }
+    .offer .glow-orb {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+    }
+    .offer-inner { max-width: 700px; margin: 0 auto; text-align: center; }
+    .offer-card {
+      margin-top: 48px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 52px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .offer-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--grad);
+    }
+    .offer-price-from { font-size: 14px; color: var(--muted); text-decoration: line-through; margin-bottom: 8px; }
+    .offer-price {
+      font-size: clamp(52px, 8vw, 72px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      background: var(--grad-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .offer-price-note { font-size: 14px; color: var(--muted); margin-bottom: 36px; }
+    .offer-includes {
+      list-style: none;
+      margin-bottom: 36px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .offer-includes li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .offer-includes li::before {
+      content: '✓';
+      width: 22px; height: 22px;
+      background: var(--grad);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .offer-btn { width: 100%; font-size: 18px; padding: 20px; border-radius: 16px; justify-content: center; }
+    .offer-safe { font-size: 13px; color: var(--muted); margin-top: 16px; }
+    .offer-guarantees {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+    .guarantee {
+      padding: 20px 16px;
+      background: rgba(139,92,246,0.05);
+      border: 1px solid rgba(139,92,246,0.12);
+      border-radius: 14px;
+      text-align: center;
+    }
+    .guarantee-icon { font-size: 28px; margin-bottom: 8px; }
+    .guarantee-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .guarantee-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    @media (max-width: 600px) { .offer-card { padding: 36px 24px; } .offer-guarantees { grid-template-columns: 1fr; } }
+
+    /* FAQ */
+    .faq { padding: 100px 0; }
+    .faq-inner { max-width: 720px; margin: 0 auto; }
+    .faq-header { text-align: center; margin-bottom: 48px; }
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .faq-item:hover { border-color: var(--border-hover); }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      text-align: left;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      gap: 16px;
+    }
+    .faq-q .arrow {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(139,92,246,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+      transition: transform 0.3s;
+      color: var(--lavender);
+    }
+    .faq-item.open .faq-q .arrow { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s;
+    }
+    .faq-item.open .faq-a { max-height: 300px; }
+    .faq-a-inner {
+      padding: 0 28px 22px;
+      font-size: 15px;
+      color: #A1A1AA;
+      line-height: 1.7;
+    }
+    .faq-a-inner strong { color: var(--lavender); font-weight: 600; }
+
+    /* FINAL CTA */
+    .final-cta {
+      padding: 80px 0;
+      background: var(--bg2);
+      text-align: center;
+    }
+    .final-cta .section-title { margin-bottom: 12px; }
+    .final-cta .section-sub { margin: 0 auto 36px; }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      text-align: center;
+    }
+    .footer-logo { margin-bottom: 16px; }
+    .footer-logo-text { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
+    .footer-logo-text .mv { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .footer-logo-text .rest { color: #fff; }
+    footer p { font-size: 13px; color: #3F3F46; }
+
+    /* ANIMATE */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.7s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img src="logo creatorpack.png" alt="MV Creator Pack" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+      <div class="nav-logo-text" style="display:none">
+        <span class="mv">MV</span><span class="rest"> Creator Pack</span>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#inside">O que tem</a></li>
+      <li><a href="#bonus">Bônus</a></li>
+      <li><a href="#depoimentos">Depoimentos</a></li>
+      <li><a href="#preco">Preço</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#preco" class="btn-primary">Quero o pack →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="glow-orb one"></div>
+  <div class="glow-orb two"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-tag tag fade-up">⚡ 500+ arquivos prontos pra usar</div>
+        <h1 class="hero-headline fade-up delay-1">
+          Você não perde<br>tempo editando.<br>
+          <span class="grad-text">Você perde tempo procurando.</span>
+        </h1>
+        <p class="hero-sub fade-up delay-2">
+          Backgrounds, sons, bordas, trilhas virais, texturas e muito mais —
+          organizados, testados e prontos pra arrastar direto pra timeline.
+          Tudo num só lugar.
+        </p>
+        <div class="hero-ctas fade-up delay-3">
+          <a href="#preco" class="btn-primary">Quero o MV Creator Pack →</a>
+          <a href="#inside" class="btn-ghost">Ver o que tem</a>
+        </div>
+        <div class="hero-proof fade-up delay-4">
+          <div class="hero-proof-avatars">
+            <span>L</span><span>B</span><span>J</span><span>A</span>
+          </div>
+          <span>+500 editores já pararam de garimpar asset</span>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="hero-mockup">
+          <div class="mockup-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="mockup-title">📁 MV Creator Pack</div>
+          <div class="mockup-grid">
+            <div class="mockup-item"><span class="icon">🎬</span>Backgrounds</div>
+            <div class="mockup-item"><span class="icon">🔊</span>Efeitos</div>
+            <div class="mockup-item"><span class="icon">🖼️</span>Bordas</div>
+            <div class="mockup-item"><span class="icon">🏷️</span>Logos</div>
+            <div class="mockup-item"><span class="icon">🎨</span>Texturas</div>
+            <div class="mockup-item"><span class="icon">🎵</span>Trilhas</div>
+          </div>
+          <div class="mockup-badge">
+            <div class="mockup-badge-left">
+              500+ arquivos
+              <span>Tudo organizado por categoria</span>
+            </div>
+            <div class="mockup-badge-right">✅</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="container">
+    <div class="pain-inner">
+      <div>
+        <div class="section-label">A realidade de todo editor</div>
+        <h2 class="section-title">Você conhece esse roteiro.</h2>
+        <p class="section-sub">
+          Você sabe editar. O problema nunca foi a habilidade.
+          Foi ter que caçar o material do zero em cada projeto.
+        </p>
+        <div class="pain-highlight">
+          Isso não é falta de talento.<br>É falta de organização —<br>e você não tem obrigação de montar isso do zero.
+        </div>
+      </div>
+      <div class="pain-story">
+        <p>
+          Você abre o editor <strong>cheio de energia</strong>. Aí começa a editar e... falta a trilha certa.
+          YouTube, "música sem direitos autorais", playlist de 4h, 12 músicas ouvidas, nenhuma encaixa.
+        </p>
+        <p>
+          Volta pro editor. Falta o efeito sonoro. Telegram, grupo de editores,
+          <strong>pack_final_v3_ESSE.zip</strong>. Baixa. Abre. Metade não abre.
+        </p>
+        <p>
+          Falta a borda. Google. Pinterest. Vídeo de 18 minutos.
+          A borda que ele usa tá num <strong>link que expirou.</strong>
+        </p>
+        <p>São 23h. Você começou às 20h. Editou <strong>30 segundos</strong> de vídeo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution">
+  <div class="glow-orb"></div>
+  <div class="container">
+    <div class="solution-inner">
+      <div class="section-label">A solução</div>
+      <h2 class="section-title">E se tudo que você precisa já<br><span class="grad-text">estivesse num só lugar?</span></h2>
+      <p class="section-sub">
+        Sem link que expira. Sem arquivo corrompido. Sem garimpar grupo de Telegram às 22h.
+        O MV Creator Pack é a biblioteca que editores de verdade usam pra produzir mais e procurar menos.
+      </p>
+      <div class="solution-stats">
+        <div class="stat-card">
+          <div class="stat-num">500+</div>
+          <div class="stat-label">Arquivos prontos pra usar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">6</div>
+          <div class="stat-label">Categorias organizadas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Projetos sem pagar de novo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIDE -->
+<section class="inside" id="inside">
+  <div class="container">
+    <div class="inside-header">
+      <div class="section-label">O que tem dentro</div>
+      <h2 class="section-title">Mais de 500 arquivos.<br><span class="grad-text">Todos organizados. Todos testados.</span></h2>
+      <p class="section-sub">Sem pasta bagunçada, sem arquivo corrompido, sem nome genérico tipo "asset_v2_final.png".</p>
+    </div>
+    <div class="inside-grid">
+      <div class="asset-card">
+        <div class="asset-icon">🎬</div>
+        <div class="asset-qty">100+ Arquivos</div>
+        <div class="asset-name">Backgrounds</div>
+        <div class="asset-desc">Fundos prontos pra qualquer estilo — minimalista, cinematográfico, urbano, colorido. Você arrasta, encaixa, segue em frente.</div>
+        <div class="asset-value">Valor de mercado: <span>R$ 47</span></div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-icon">🔊</div>
+        <div class="asset-qty">150+ Arquivos</div>
+        <div class="asset-name">Efeitos Sonoros</div>
+        <div class="asset-desc">O whoosh certinho, o impacto que dá peso na transição, o som de digitação que faz o texto parecer vivo. Separados por tipo, acha em 10 segundos.</div>
+        <div class="asset-value">Valor de mercado: <span>R$ 37</span></div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-icon">🖼️</div>
+        <div class="asset-qty">PNG</div>
+        <div class="asset-name">Bordas em PNG</div>
+        <div class="asset-desc">As bordas que estão bombando agora — não as de 2021 que todo mundo já viu. Fundo transparente, prontas pra usar, sem precisar recortar nada.</div>
+        <div class="asset-value">Valor de mercado: <span>R$ 27</span></div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-icon">🏷️</div>
+        <div class="asset-qty">PNG</div>
+        <div class="asset-name">Logos em PNG</div>
+        <div class="asset-desc">Coleção de logos com fundo transparente que aparecem direto na timeline. Chega de buscar "logo [marca] PNG sem fundo" e baixar um JPG branco horrível.</div>
+        <div class="asset-value">Valor de mercado: <span>R$ 19</span></div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-icon">🎨</div>
+        <div class="asset-qty">Pack completo</div>
+        <div class="asset-name">Texturas</div>
+        <div class="asset-desc">Grunge, papel, noise, gradiente — categorizadas e leves pra não travar o editor. Você filtra pelo estilo e escolhe em segundos.</div>
+        <div class="asset-value">Valor de mercado: <span>R$ 19</span></div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-icon">🎵</div>
+        <div class="asset-qty">Viral ⚡</div>
+        <div class="asset-name">Trilhas Sonoras</div>
+        <div class="asset-desc">Hype, emotional, lo-fi, motivacional, trap — organizadas por estilo. E tem uma pasta só com os instrumentais que estão viralizando no TikTok e Reels agora.</div>
+        <div class="asset-value">Valor de mercado: <span>R$ 67</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE STACK -->
+<section class="value">
+  <div class="container">
+    <div class="value-inner">
+      <div class="section-label">Quanto vale</div>
+      <h2 class="section-title">Se fosse comprar<br><span class="grad-text">cada coisa separada...</span></h2>
+      <div class="value-table">
+        <div class="value-row"><div class="item"><span>🎬</span> 100+ Backgrounds</div><div class="price">R$ 47</div></div>
+        <div class="value-row"><div class="item"><span>🔊</span> 150+ Efeitos Sonoros</div><div class="price">R$ 37</div></div>
+        <div class="value-row"><div class="item"><span>🖼️</span> Bordas em PNG</div><div class="price">R$ 27</div></div>
+        <div class="value-row"><div class="item"><span>🏷️</span> Logos em PNG</div><div class="price">R$ 19</div></div>
+        <div class="value-row"><div class="item"><span>🎨</span> Texturas</div><div class="price">R$ 19</div></div>
+        <div class="value-row"><div class="item"><span>🎵</span> Trilhas + Instrumentais Virais</div><div class="price">R$ 67</div></div>
+        <div class="value-row"><div class="item"><span>🎁</span> Bônus Secreto</div><div class="price">R$ 49</div></div>
+        <div class="value-row value-total"><div class="item">Total se comprar separado</div><div class="price">R$ 265</div></div>
+        <div class="value-row value-final"><div class="item">MV Creator Pack — hoje</div><div class="price">R$ 29,90</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS -->
+<section class="bonus" id="bonus">
+  <div class="glow-orb"></div>
+  <div class="container">
+    <div class="bonus-inner">
+      <div class="tag">🎁 Exclusivo</div>
+      <h2 class="section-title" style="margin-top:20px">Espera.<br><span class="grad-text">Tem mais.</span></h2>
+      <p class="section-sub" style="margin:0 auto">Além dos 500+ arquivos, você ainda recebe uma pasta de bônus com materiais extras pra acelerar ainda mais.</p>
+      <div class="bonus-card">
+        <div class="bonus-items">
+          <div class="bonus-item">
+            <div class="bonus-item-icon">🎵</div>
+            <div class="bonus-item-text">
+              <strong>Instrumentais Virais</strong>
+              <p>Os instrumentais que estão bombando no TikTok essa semana. Atualizado com frequência.</p>
+            </div>
+          </div>
+          <div class="bonus-item">
+            <div class="bonus-item-icon">✨</div>
+            <div class="bonus-item-text">
+              <strong>Efeitos Premium</strong>
+              <p>Selecionados a dedo — não os genéricos que todo mundo já usa. Diferencial na timeline.</p>
+            </div>
+          </div>
+          <div class="bonus-item">
+            <div class="bonus-item-icon">🔄</div>
+            <div class="bonus-item-text">
+              <strong>Atualizações Gratuitas</strong>
+              <p>Sempre que sair material novo você recebe. Sem pagar de novo, nunca.</p>
+            </div>
+          </div>
+          <div class="bonus-item">
+            <div class="bonus-item-icon">📈</div>
+            <div class="bonus-item-text">
+              <strong>Trends do TikTok</strong>
+              <p>Assets alinhados com o que está viralizando agora. Conteúdo atualizado e relevante.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bonus-secret">
+          <div class="bonus-secret-icon">🔒</div>
+          <div class="bonus-secret-text">
+            <strong>+ Uma surpresa que você só descobre quando comprar</strong>
+            <p>Tem mais uma coisa dentro que a gente não revela aqui. Vale muito mais que o preço do pack.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPAT -->
+<section class="compat">
+  <div class="container">
+    <div class="compat-inner">
+      <div class="compat-label">Funciona onde você já trabalha</div>
+      <div class="compat-logos">
+        <div class="compat-logo">🎬 CapCut</div>
+        <div class="compat-logo">🎞️ Premiere Pro</div>
+        <div class="compat-logo">✨ After Effects</div>
+        <div class="compat-logo">🎨 DaVinci Resolve</div>
+        <div class="compat-logo">📱 TikTok</div>
+        <div class="compat-logo">📸 Instagram</div>
+        <div class="compat-logo">▶️ YouTube</div>
+        <div class="compat-logo">⚡ Shorts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREATOR -->
+<section class="creator">
+  <div class="container">
+    <div class="creator-inner">
+      <div class="creator-avatar">👨‍💻</div>
+      <div>
+        <div class="section-label">Quem criou</div>
+        <div class="creator-name">João Pedro Caselli</div>
+        <div class="creator-role">Especialista em Edição de Vídeo · 5+ anos</div>
+        <p class="creator-bio">
+          Montei esse pack porque eu mesmo vivia nesse ciclo. Abria o editor animado,
+          gastava metade do tempo procurando material, terminava o vídeo cansado e sem
+          vontade de postar.
+          <br><br>
+          Um dia resolvi organizar tudo que eu usava de verdade. O resultado foi o MV Creator Pack.
+          Se funcionou pra mim trabalhando com grandes marcas, funciona pra você criando conteúdo todos os dias.
+        </p>
+        <div class="creator-brands">
+          <span class="creator-brand">Bauducco</span>
+          <span class="creator-brand">BOSCH</span>
+          <span class="creator-brand">Oakley</span>
+          <span class="creator-brand">Hyundai</span>
+          <span class="creator-brand">UOL</span>
+          <span class="creator-brand">Marcopolo</span>
+          <span class="creator-brand">Golden</span>
+          <span class="creator-brand">Jontex</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="depoimentos">
+  <div class="container">
+    <div class="testimonials-header">
+      <div class="section-label">Quem já tem</div>
+      <h2 class="section-title">O que os criadores <span class="grad-text">dizem</span></h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Economizei <strong>semanas de procura por assets</strong>. Tudo organizado, é só arrastar pra timeline. Minha produção dobrou de frequência."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">L</div>
+          <div><div class="testi-name">Lucas M.</div><div class="testi-role">Criador de conteúdo · Verificado</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"As trilhas virais valem o pack inteiro. <strong>Meus vídeos engajaram muito mais</strong> desde que comecei a usar. Não consigo mais editar sem."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">B</div>
+          <div><div class="testi-name">Bia R.</div><div class="testi-role">Editora de conteúdo · Verificada</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Finalmente um pack que <strong>não é genérico</strong>. Abri, vi a organização, e já entendi que era diferente de tudo que já comprei antes."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">J</div>
+          <div><div class="testi-name">Júlia P.</div><div class="testi-role">Produtora de vídeo · Verificada</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"João Pedro do céu… <strong>que material maravilhoso</strong>… puxa vida, parabéns… fantástico. Superou todas as minhas expectativas."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div><div class="testi-name">Alexandre Aquino</div><div class="testi-role">Editor verificado</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Comprei pra melhorar minhas edições e foi o <strong>melhor investimento</strong> que já fiz no meu canal. Cada centavo valeu demais."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">I</div>
+          <div><div class="testi-name">Iago Silva</div><div class="testi-role">YouTuber · Verificado</div></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Acabei de comprar e <strong>já estou gostando demais</strong>! A organização é impecável. Nunca vi um pack tão bem estruturado como esse."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">L</div>
+          <div><div class="testi-name">Laurentino Vicente</div><div class="testi-role">Editor verificado</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="offer" id="preco">
+  <div class="glow-orb"></div>
+  <div class="container">
+    <div class="offer-inner">
+      <div class="tag">⚡ Oferta por tempo limitado</div>
+      <h2 class="section-title" style="margin-top:20px">Garanta seu<br><span class="grad-text">MV Creator Pack</span></h2>
+      <div class="offer-card">
+        <div class="offer-price-from">De R$ 265 se comprar separado</div>
+        <div class="offer-price">R$ 29,90</div>
+        <div class="offer-price-note">Pagamento único · Acesso vitalício · Hotmart</div>
+        <ul class="offer-includes">
+          <li>500+ arquivos prontos pra usar</li>
+          <li>Backgrounds, efeitos sonoros, bordas e logos em PNG</li>
+          <li>Texturas categorizadas + trilhas por estilo</li>
+          <li>Pasta exclusiva com instrumentais virais</li>
+          <li>Bônus secreto incluso</li>
+          <li>Atualizações gratuitas pra sempre</li>
+        </ul>
+        <a href="#" class="btn-primary offer-btn">QUERO O MV CREATOR PACK AGORA →</a>
+        <div class="offer-safe">🔒 Pagamento 100% seguro processado pela Hotmart</div>
+        <div class="offer-guarantees">
+          <div class="guarantee">
+            <div class="guarantee-icon">🛡️</div>
+            <div class="guarantee-title">Garantia 7 dias</div>
+            <div class="guarantee-desc">Não gostou? 100% do dinheiro de volta, sem burocracia.</div>
+          </div>
+          <div class="guarantee">
+            <div class="guarantee-icon">♾️</div>
+            <div class="guarantee-title">Acesso vitalício</div>
+            <div class="guarantee-desc">Use pra sempre, em quantos projetos quiser. Sem mensalidade.</div>
+          </div>
+          <div class="guarantee">
+            <div class="guarantee-icon">⚡</div>
+            <div class="guarantee-title">Acesso imediato</div>
+            <div class="guarantee-desc">Em menos de 5 minutos o pack já está no seu e-mail.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="faq-inner">
+      <div class="faq-header">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Perguntas <span class="grad-text">frequentes</span></h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Vale a pena se eu sou iniciante?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <strong>Principalmente pra você.</strong> Iniciante não tem biblioteca formada ainda — esse pack entrega tudo organizado desde o primeiro dia. Você começa a editar como quem já tem anos de material acumulado. Sem curva de aprendizado, sem configuração. Baixou, abriu, usou.
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            É diferente do que acho de graça no Pinterest e Telegram?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <strong>Completamente.</strong> O que você acha de graça é genérico, desorganizado e muitas vezes desatualizado. Aqui tudo foi curado, testado e organizado pra você usar sem dor de cabeça. A diferença aparece na primeira vez que você abrir e não tiver que descompactar 7 pastas pra achar uma textura.
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Funciona no meu editor?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Se você usa <strong>CapCut, Premiere, After Effects ou DaVinci</strong> — sim. Os arquivos são em formatos universais (PNG, MP3, MP4) que qualquer editor aceita. Você não precisa instalar nada, não precisa de plugin.
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Como recebo o pack após a compra?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            Em <strong>menos de 5 minutos</strong> você recebe o acesso por e-mail via Hotmart. É só clicar no link, baixar, organizar na sua máquina e começar a usar. Simples assim.
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Posso usar os arquivos comercialmente?
+            <span class="arrow">▼</span>
+          </button>
+          <div class="faq-a"><div class="faq-a-inner">
+            <strong>Sim.</strong> Você pode usar em projetos pessoais e comerciais, em vídeos pra clientes, pra marcas, pra qualquer projeto. Sem preocupação com direitos autorais nos assets do pack.
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="container">
+    <div class="section-label">Última chance</div>
+    <h2 class="section-title">Chega de perder tempo.<br><span class="grad-text">Esse é o momento.</span></h2>
+    <p class="section-sub">500+ arquivos organizados, testados e prontos pra usar. Por R$ 29,90. Uma vez. Pra sempre.</p>
+    <a href="#preco" class="btn-primary" style="font-size:18px; padding:20px 48px;">QUERO O MV CREATOR PACK →</a>
+    <p style="font-size:13px; color:#52525B; margin-top:16px;">Garantia de 7 dias · Acesso vitalício · Hotmart</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-logo">
+      <img src="logo creatorpack.png" alt="MV Creator Pack" style="height:32px" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+      <div class="footer-logo-text" style="display:none">
+        <span class="mv">MV</span><span class="rest"> Creator Pack</span>
+      </div>
+    </div>
+    <p>© 2026 MV Creator Pack — Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Smooth reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.asset-card, .testi-card, .stat-card, .guarantee').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
