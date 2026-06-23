@@ -686,11 +686,14 @@
     /* ── COMPAT ── */
     .compat { background: var(--bg2); }
     .compat-pills {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(4, auto);
       gap: 10px;
       justify-content: center;
       margin-top: 40px;
+    }
+    @media(max-width:768px){
+      .compat-pills { display: flex; flex-wrap: wrap; }
     }
     .compat-pill {
       display: flex;
@@ -1656,7 +1659,7 @@
 <section class="compat">
   <div class="wrap">
     <div class="center">
-      <p class="t-label section-eye reveal">Compatibilidade</p>
+      <p class="t-label section-eye reveal">Onde usar</p>
       <h2 class="t-title section-title reveal">Funciona onde<br><span class="grad-text">você já trabalha.</span></h2>
     </div>
     <div class="compat-pills" data-stagger>
