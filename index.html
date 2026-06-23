@@ -493,7 +493,12 @@
       margin-top: 32px;
     }
     .pain-callout p { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.6; }
-    @media(max-width:768px){ .pain-grid { grid-template-columns: 1fr; } }
+    @media(max-width:768px){
+      .pain-grid { grid-template-columns: 1fr; }
+      .desktop-br { display: none; }
+      .pain-callout p { white-space: normal !important; }
+    }
+    .desktop-br { display: block; }
 
     /* ── TL CONCLUSION ── */
     .tl-conclusion {
@@ -704,9 +709,9 @@
     .compat-pill:hover { border-color: var(--border2); color: var(--text); background: var(--surface2); }
 
     /* ── CREATOR ── */
-    .creator-grid { display: grid; grid-template-columns: 300px 1fr; gap: 64px; align-items: center; }
+    .creator-grid { display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: center; }
     .creator-photo {
-      width: 300px;
+      width: 100%;
       border-radius: 24px;
       background: #0e0e18;
       border: 1px solid var(--border);
@@ -1115,6 +1120,10 @@
     .carousel-btn:hover { background: var(--surface2); border-color: var(--border2); }
     .carousel-btn-prev { left: 16px; }
     .carousel-btn-next { right: 16px; }
+    @media(min-width:769px){
+      .carousel-btn-prev { left: calc(50% - 37.5vw - 56px); }
+      .carousel-btn-next { right: calc(50% - 37.5vw - 56px); }
+    }
 
     /* ── SHIMMER BTN ── */
     .btn-fill { position: relative; overflow: hidden; }
@@ -1232,8 +1241,8 @@
   <div class="hero-inner">
       <div class="hero-eyebrow">O pack que a equipe da MV usa todo dia</div>
       <h1 class="t-display hero-headline">
-        Você não perde<br>tempo editando.<br>
-        <span class="grad-text">Você perde tempo<br>procurando.</span>
+        Você não perde tempo editando.<br>
+        <span class="grad-text">Você perde tempo procurando.</span>
       </h1>
       <p class="hero-sub">
         Você já sabe o que precisa fazer. Agora tem tudo o que precisa em um lugar só, sem precisar abrir 10 abas antes de editar o primeiro segundo de vídeo.
@@ -1355,7 +1364,7 @@
         <h2 class="t-title section-title split-text">Abre o projeto.<br>Meia hora depois ainda<br>tá procurando musiquinha viral.</h2>
         <p class="t-body reveal" style="max-width:420px">Você gasta mais tempo garimpando do que editando. Quando volta pra timeline, já tem que procurar o próximo efeito pra usar.</p>
         <div class="pain-callout reveal" style="margin-top:32px">
-          <p>Isso é a falta de ter o material certo na mão quando você precisa!!!!!</p>
+          <p style="white-space:nowrap">Isso é a falta de ter o material certo na mão quando você precisa!!!!!</p>
         </div>
       </div>
       <div class="timeline" data-stagger>
@@ -1381,7 +1390,7 @@
         </div>
         <div class="tl-conclusion">
           <div class="tl-conclusion-dot"></div>
-          <p class="timeline-text">aqui você perdeu dinheiro, paciência e o seu ativo mais valioso — <span class="grad-text">o tempo</span></p>
+          <p class="timeline-text">aqui você perdeu dinheiro, paciência<br class="desktop-br"> e o seu ativo mais valioso — <span class="grad-text">o tempo</span></p>
         </div>
       </div>
   </div>
@@ -1683,8 +1692,12 @@
           <span class="brand-chip">YouTube</span>
           <span class="brand-chip">VSL</span>
         </div>
-        <div class="creator-photo">
-          <div class="ig-card">
+        <p class="creator-bio">
+          Cada arquivo aqui foi testado e aprovado. O que não performou, ficou de fora. O que ficou, é o que facilita a vida da equipe de produção.
+        </p>
+      </div>
+      <div class="creator-photo">
+        <div class="ig-card">
             <div class="ig-header">
               <div class="ig-avatar" id="igAvatar">MV</div>
               <div>
@@ -1740,11 +1753,6 @@
             </div>
           </div>
         </div>
-      </div>
-      <div style="display: flex; align-items: center;">
-        <p class="creator-bio">
-          Cada arquivo aqui foi testado e aprovado. O que não performou, ficou de fora. O que ficou, é o que facilita a vida da equipe de produção.
-        </p>
       </div>
     </div>
   </div>
@@ -2138,6 +2146,17 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.timeline').forEach(el => tlio.observe(el));
 
+  // Pause all other Wistia videos when one starts playing
+  window._wq = window._wq || [];
+  window._wq.push({ id: '_all', onReady: function(video) {
+    video.bind('play', function() {
+      document.querySelectorAll('wistia-player').forEach(function(el) {
+        if (el.getAttribute('media-id') !== video.hashedId()) {
+          el.pause && el.pause();
+        }
+      });
+    });
+  }});
 
 </script>
 <!-- WHATSAPP FLOAT -->
