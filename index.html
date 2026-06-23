@@ -2127,7 +2127,6 @@
 
   // ── SPLIT TEXT ──
   document.querySelectorAll('.split-text').forEach(el => {
-    // Only process text nodes to preserve inner HTML tags
     const processNode = node => {
       if (node.nodeType === 3) { // text node
         const words = node.textContent.split(/(\s+)/);
@@ -2146,8 +2145,19 @@
           }
         });
         node.parentNode.replaceChild(frag, node);
-      } else if (node.nodeType === 1 && node.childNodes.length) {
-        Array.from(node.childNodes).forEach(processNode);
+      } else if (node.nodeType === 1) {
+        // Wrap grad-text spans as a whole split-word unit — don't recurse into them
+        if (node.classList && node.classList.contains('grad-text')) {
+          const wrap = document.createElement('span');
+          wrap.className = 'split-word';
+          const inner = document.createElement('span');
+          inner.className = 'split-inner';
+          node.parentNode.insertBefore(wrap, node);
+          wrap.appendChild(inner);
+          inner.appendChild(node);
+        } else if (node.childNodes.length) {
+          Array.from(node.childNodes).forEach(processNode);
+        }
       }
     };
     Array.from(el.childNodes).forEach(processNode);
@@ -2256,5 +2266,4 @@
   </svg>
 </a>
 </body>
-<!-- v2 -->
 </html>
