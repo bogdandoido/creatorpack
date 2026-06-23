@@ -682,6 +682,21 @@
     .bonus-secret-title { font-size: 15px; font-weight: 700; color: var(--p3); margin-bottom: 4px; }
     .bonus-secret-desc { font-size: 13px; color: var(--text2); }
     @media(max-width:600px){ .bonus-grid { grid-template-columns: 1fr; } }
+    @media(min-width:601px){ .bonus-wide { grid-column: 1 / -1; } }
+    .bonus-perks {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .bonus-perk {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--p3);
+      font-weight: 600;
+    }
+    .bonus-perk svg { flex-shrink: 0; stroke: var(--p1); }
 
     /* ── COMPAT ── */
     .compat { background: var(--bg2); }
@@ -1635,12 +1650,17 @@
         <div class="bonus-item-title">Efeitos que ninguém tem</div>
         <div class="bonus-item-desc">Não os genéricos que aparecem em todo vídeo de 2021. Esses você não acha no Google.</div>
       </div>
-      <div class="bonus-item glass glass-hover">
+      <div class="bonus-item glass glass-hover bonus-wide">
         <div class="bonus-item-icon">
           <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
         </div>
         <div class="bonus-item-title">Descontos Exclusivos no Ecossistema MV</div>
-        <div class="bonus-item-desc">Quem tem o pack entra na fila preferencial de ofertas e lançamentos da Venda com Criativos.</div>
+        <div class="bonus-item-desc" style="margin-bottom:16px">Quem tem o pack entra na fila preferencial de ofertas e lançamentos da Venda com Criativos.</div>
+        <div class="bonus-perks">
+          <div class="bonus-perk"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cupons exclusivos para o HooksLab</div>
+          <div class="bonus-perk"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Desconto em pacotes de criativos da MV</div>
+          <div class="bonus-perk"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cupons para qualquer ferramenta lançada pelo ecossistema MV</div>
+        </div>
       </div>
       <div class="bonus-secret">
         <div class="bonus-secret-lock">
