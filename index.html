@@ -2170,53 +2170,52 @@
   document.querySelectorAll('.timeline').forEach(el => tlio.observe(el));
 
   // ── WISTIA VIDEO CONTROL ──
-  var wistiaPlayers = {};
-
-  window._wq = window._wq || [];
-  window._wq.push({ id: '_all', onReady: function(video) {
-    wistiaPlayers[video.hashedId()] = video;
-
-    // Pause all others when this one plays
-    video.bind('play', function() {
-      Object.keys(wistiaPlayers).forEach(function(id) {
-        if (id !== video.hashedId()) wistiaPlayers[id].pause();
-      });
-    });
-  }});
+  function getAllWistiaPlayers() {
+    return Array.from(document.querySelectorAll('wistia-player'));
+  }
 
   function pauseAllWistia() {
-    Object.values(wistiaPlayers).forEach(function(v) { v.pause(); });
+    getAllWistiaPlayers().forEach(function(el) {
+      try { if (typeof el.pause === 'function') el.pause(); } catch(e) {}
+    });
   }
 
   function playWistiaInCard(card) {
-    var player = card.querySelector('wistia-player');
-    if (!player) return;
-    var id = player.getAttribute('media-id');
     pauseAllWistia();
-    if (wistiaPlayers[id]) wistiaPlayers[id].play();
+    var el = card.querySelector('wistia-player');
+    if (el) setTimeout(function() {
+      try { if (typeof el.play === 'function') el.play(); } catch(e) {}
+    }, 350);
   }
 
-  // Arrow: pause current, play next
-  var _origMoveCarousel = window.moveCarousel;
+  // Pause others when one starts playing (native event on the element)
+  document.addEventListener('play', function(e) {
+    if (e.target.tagName && e.target.tagName.toLowerCase() === 'wistia-player') {
+      getAllWistiaPlayers().forEach(function(el) {
+        if (el !== e.target) try { el.pause(); } catch(e) {}
+      });
+    }
+  }, true);
+
+  // Arrow: pause current, scroll, play next
   window.moveCarousel = function(dir) {
     var track = document.getElementById('carouselTrack');
-    var cards = track.querySelectorAll('.carousel-card');
+    var cards = Array.from(track.querySelectorAll('.carousel-card'));
     var active = track.querySelector('.carousel-card.active');
-    var idx = Array.from(cards).indexOf(active);
+    var idx = cards.indexOf(active);
     var nextIdx = Math.max(0, Math.min(cards.length - 1, idx + dir));
     var nextCard = cards[nextIdx];
+    pauseAllWistia();
     nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    setTimeout(function() { playWistiaInCard(nextCard); }, 400);
+    playWistiaInCard(nextCard);
   };
 
-  // Pause all when carousel section scrolls out of view
-  var carouselSection = document.querySelector('#exemplos') || document.querySelector('.carousel-track-wrap');
-  if (carouselSection) {
+  // Pause all when showcase section leaves viewport
+  var showcaseSection = document.querySelector('section.showcase');
+  if (showcaseSection) {
     new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (!e.isIntersecting) pauseAllWistia();
-      });
-    }, { threshold: 0.05 }).observe(carouselSection.closest('section') || carouselSection);
+      if (!entries[0].isIntersecting) pauseAllWistia();
+    }, { threshold: 0.01 }).observe(showcaseSection);
   }
 
 </script>
