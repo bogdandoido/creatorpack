@@ -2169,17 +2169,55 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.timeline').forEach(el => tlio.observe(el));
 
-  // Pause all other Wistia videos when one starts playing
+  // ── WISTIA VIDEO CONTROL ──
+  var wistiaPlayers = {};
+
   window._wq = window._wq || [];
   window._wq.push({ id: '_all', onReady: function(video) {
+    wistiaPlayers[video.hashedId()] = video;
+
+    // Pause all others when this one plays
     video.bind('play', function() {
-      document.querySelectorAll('wistia-player').forEach(function(el) {
-        if (el.getAttribute('media-id') !== video.hashedId()) {
-          el.pause && el.pause();
-        }
+      Object.keys(wistiaPlayers).forEach(function(id) {
+        if (id !== video.hashedId()) wistiaPlayers[id].pause();
       });
     });
   }});
+
+  function pauseAllWistia() {
+    Object.values(wistiaPlayers).forEach(function(v) { v.pause(); });
+  }
+
+  function playWistiaInCard(card) {
+    var player = card.querySelector('wistia-player');
+    if (!player) return;
+    var id = player.getAttribute('media-id');
+    pauseAllWistia();
+    if (wistiaPlayers[id]) wistiaPlayers[id].play();
+  }
+
+  // Arrow: pause current, play next
+  var _origMoveCarousel = window.moveCarousel;
+  window.moveCarousel = function(dir) {
+    var track = document.getElementById('carouselTrack');
+    var cards = track.querySelectorAll('.carousel-card');
+    var active = track.querySelector('.carousel-card.active');
+    var idx = Array.from(cards).indexOf(active);
+    var nextIdx = Math.max(0, Math.min(cards.length - 1, idx + dir));
+    var nextCard = cards[nextIdx];
+    nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    setTimeout(function() { playWistiaInCard(nextCard); }, 400);
+  };
+
+  // Pause all when carousel section scrolls out of view
+  var carouselSection = document.querySelector('#exemplos') || document.querySelector('.carousel-track-wrap');
+  if (carouselSection) {
+    new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (!e.isIntersecting) pauseAllWistia();
+      });
+    }, { threshold: 0.05 }).observe(carouselSection.closest('section') || carouselSection);
+  }
 
 </script>
 <!-- WHATSAPP FLOAT -->
