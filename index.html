@@ -2093,9 +2093,11 @@
     window.moveCarousel = function(dir) {
       const active = track.querySelector('.carousel-card.active');
       if (!active) return;
-      const idx = Array.from(cards).indexOf(active);
-      const next = cards[Math.max(0, Math.min(cards.length - 1, idx + dir))];
-      next.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const allCards = Array.from(cards);
+      const idx = allCards.indexOf(active);
+      const nextIdx = (idx + dir + allCards.length) % allCards.length;
+      const isWrap = (idx === 0 && dir === -1) || (idx === allCards.length - 1 && dir === 1);
+      allCards[nextIdx].scrollIntoView({ behavior: isWrap ? 'instant' : 'smooth', block: 'nearest', inline: 'center' });
     };
 
     // Drag to scroll
@@ -2246,10 +2248,11 @@
     var cards = Array.from(track.querySelectorAll('.carousel-card'));
     var active = track.querySelector('.carousel-card.active');
     var idx = cards.indexOf(active);
-    var nextIdx = Math.max(0, Math.min(cards.length - 1, idx + dir));
+    var nextIdx = (idx + dir + cards.length) % cards.length;
     var nextCard = cards[nextIdx];
+    var isWrap = (idx === 0 && dir === -1) || (idx === cards.length - 1 && dir === 1);
     pauseAllWistia();
-    nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    nextCard.scrollIntoView({ behavior: isWrap ? 'instant' : 'smooth', block: 'nearest', inline: 'center' });
     playWistiaInCard(nextCard);
   };
 
