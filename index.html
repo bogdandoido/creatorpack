@@ -966,6 +966,15 @@
       flex-shrink: 0;
     }
     .check-icon svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .offer-delivery { padding: 20px 36px; border-top: 1px solid rgba(255,255,255,0.07); }
+    .offer-delivery-title { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--p3); margin-bottom: 14px; }
+    .offer-delivery-steps { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .offer-delivery-step { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 120px; }
+    .offer-delivery-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(155,127,255,0.15); border: 1px solid rgba(155,127,255,0.35); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--p1); flex-shrink: 0; }
+    .offer-delivery-info { display: flex; flex-direction: column; gap: 2px; }
+    .offer-delivery-info strong { font-size: 13px; font-weight: 700; color: var(--text); }
+    .offer-delivery-info span { font-size: 11px; color: var(--muted); }
+    .offer-delivery-arrow { color: var(--p1); font-size: 16px; opacity: .5; flex-shrink: 0; }
     .offer-card-bottom { padding: 28px 36px; background: var(--surface); }
     .offer-guarantees {
       display: grid;
@@ -1829,6 +1838,25 @@
           <li><div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Projetos ilimitados — usa quantas vezes quiser, pra sempre</li>
           <li><div class="check-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>Atualizações gratuitas — novos assets inclusos sem pagar de novo</li>
         </ul>
+      </div>
+      <div class="offer-delivery">
+        <div class="offer-delivery-title">Como você recebe</div>
+        <div class="offer-delivery-steps">
+          <div class="offer-delivery-step">
+            <div class="offer-delivery-num">1</div>
+            <div class="offer-delivery-info"><strong>Compra</strong><span>Finaliza em segundos via Hotmart</span></div>
+          </div>
+          <div class="offer-delivery-arrow">→</div>
+          <div class="offer-delivery-step">
+            <div class="offer-delivery-num">2</div>
+            <div class="offer-delivery-info"><strong>Recebe o link</strong><span>Em até 5 min no seu email</span></div>
+          </div>
+          <div class="offer-delivery-arrow">→</div>
+          <div class="offer-delivery-step">
+            <div class="offer-delivery-num">3</div>
+            <div class="offer-delivery-info"><strong>Acessa tudo</strong><span>Google Drive organizado, pra sempre</span></div>
+          </div>
+        </div>
       </div>
       <div class="offer-card-bottom">
         <a href="#" class="btn btn-fill btn-lg btn-block">Comprar agora</a>
