@@ -2341,10 +2341,15 @@
   };
 
   // Play ao entrar + pause ao sair do showcase
+  // Só ativa após o usuário rolar (evita auto-scroll no load)
   var showcaseSection = document.querySelector('section.showcase');
+  var userHasScrolled = false;
+  window.addEventListener('scroll', function() { userHasScrolled = true; }, { once: true, passive: true });
+
   if (showcaseSection) {
     new IntersectionObserver(function(entries) {
       var e = entries[0];
+      if (!userHasScrolled) return; // ignora disparo no page load
       if (e.isIntersecting) {
         showcaseVisible = true;
         var track = document.getElementById('carouselTrack');
