@@ -1125,6 +1125,7 @@
     /* ── SHOWCASE CAROUSEL ── */
     .showcase { padding: 52px 0; }
     .showcase .center { margin-bottom: 56px; }
+    .carousel-outer { position: relative; }
     .carousel-track-wrap {
       position: relative;
       width: 100%;
@@ -1478,6 +1479,7 @@
       <h2 class="t-title section-title reveal">Veja vídeos feitos<br>com <span class="grad-text">o pack.</span></h2>
     </div>
   </div>
+  <div class="carousel-outer">
   <div class="carousel-track-wrap reveal">
     <div class="carousel-track" id="carouselTrack">
 
@@ -1530,13 +1532,14 @@
       </div>
 
     </div>
-    <!-- arrows -->
-    <button class="carousel-btn carousel-btn-prev" onclick="moveCarousel(-1)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <button class="carousel-btn carousel-btn-next" onclick="moveCarousel(1)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-    </button>
+  </div>
+  <!-- arrows FORA do overflow:hidden -->
+  <button class="carousel-btn carousel-btn-prev" onclick="moveCarousel(-1)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="carousel-btn carousel-btn-next" onclick="moveCarousel(1)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
   </div>
 </section>
 
@@ -2123,6 +2126,8 @@
     });
 
     let isSnapping = false;
+    let scrollSettleTimer = null;
+    let showcaseVisible = false;
 
     function updateActive() {
       if (isSnapping) return;
@@ -2147,8 +2152,20 @@
           a2.forEach(c => c.classList.remove('active'));
           target.classList.add('active');
           isSnapping = false;
+          if (showcaseVisible) playActiveCard();
         }, 300);
+        return;
       }
+      // Play video do card ativo após scroll parar
+      if (showcaseVisible) {
+        clearTimeout(scrollSettleTimer);
+        scrollSettleTimer = setTimeout(playActiveCard, 450);
+      }
+    }
+
+    function playActiveCard() {
+      var active = track.querySelector('.carousel-card.active:not([data-clone])');
+      if (active) playWistiaInCard(active);
     }
 
     track.addEventListener('scroll', updateActive, { passive: true });
@@ -2325,21 +2342,18 @@
 
   // Play ao entrar + pause ao sair do showcase
   var showcaseSection = document.querySelector('section.showcase');
-  var hasAutoPlayed = false;
   if (showcaseSection) {
     new IntersectionObserver(function(entries) {
       var e = entries[0];
       if (e.isIntersecting) {
-        if (!hasAutoPlayed) {
-          hasAutoPlayed = true;
-          var track = document.getElementById('carouselTrack');
-          var active = track ? track.querySelector('.carousel-card.active') : null;
-          if (!active) active = track ? track.querySelector('.carousel-card') : null;
-          if (active) playWistiaInCard(active);
-        }
+        showcaseVisible = true;
+        var track = document.getElementById('carouselTrack');
+        var active = track ? track.querySelector('.carousel-card.active:not([data-clone])') : null;
+        if (!active) active = track ? track.querySelector('.carousel-card:not([data-clone])') : null;
+        if (active) playWistiaInCard(active);
       } else {
+        showcaseVisible = false;
         pauseAllWistia();
-        hasAutoPlayed = false; // reset pra tocar de novo quando voltar
       }
     }, { threshold: 0.3 }).observe(showcaseSection);
   }
