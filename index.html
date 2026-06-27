@@ -694,16 +694,37 @@
       gap: 12px;
     }
     .bonus-tag-slim {
-      background: rgba(155,127,255,0.08);
-      border: 1px solid rgba(155,127,255,0.2);
-      border-radius: 14px;
-      padding: 18px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 14px 18px;
       text-align: center;
-      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .bonus-tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(155,127,255,0.15);
+      border: 1px solid rgba(155,127,255,0.3);
+      border-radius: 20px;
+      padding: 3px 10px 3px 7px;
+      font-size: 10px;
       font-weight: 700;
       color: var(--p3);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .bonus-tag-badge svg { width: 10px; height: 10px; fill: var(--p3); stroke: none; }
+    .bonus-tag-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
       letter-spacing: -0.01em;
-      line-height: 1.5;
+      line-height: 1.45;
     }
     @media(min-width:601px){ .bonus-wide { grid-column: 1 / -1; } }
     .bonus-perks {
@@ -1653,9 +1674,18 @@
     </div>
     <div class="bonus-grid" data-stagger>
       <div class="bonus-tags-row">
-        <div class="bonus-tag-slim">Instrumental<br>Exclusivo</div>
-        <div class="bonus-tag-slim">Efeitos<br>Premium</div>
-        <div class="bonus-tag-slim">Descontos no<br>Ecossistema MV</div>
+        <div class="bonus-tag-slim">
+          <span class="bonus-tag-badge"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Bônus</span>
+          <span class="bonus-tag-label">Instrumental<br>Exclusivo</span>
+        </div>
+        <div class="bonus-tag-slim">
+          <span class="bonus-tag-badge"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Bônus</span>
+          <span class="bonus-tag-label">Efeitos<br>Premium</span>
+        </div>
+        <div class="bonus-tag-slim">
+          <span class="bonus-tag-badge"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Bônus</span>
+          <span class="bonus-tag-label">Descontos no<br>Ecossistema MV</span>
+        </div>
       </div>
       <div class="bonus-secret">
         <div class="bonus-secret-lock">
