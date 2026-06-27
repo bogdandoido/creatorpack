@@ -810,6 +810,12 @@
     .creator-bio { font-size: 16px; color: var(--text2); line-height: 1.75; margin-bottom: 28px; }
     .creator-brands { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 8px; }
     @media(max-width:768px){ .creator-brands { display: flex; flex-wrap: wrap; } }
+    /* Instagram preview — mobile slot */
+    .creator-photo-mobile { display: none; }
+    @media(max-width:768px) {
+      .creator-photo-mobile { display: block; margin: 24px 0 8px; }
+      .creator-photo-desktop { display: none !important; }
+    }
     .brand-chip {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -1721,6 +1727,63 @@
         <p class="creator-bio" style="margin-top: 20px;">
           A gente não montou esse pack do zero sentado numa tarde. Ele é o resultado de 3 anos editando vídeo pra grandes players do mercado digital.
         </p>
+        <div class="creator-photo-mobile">
+          <div class="ig-card">
+            <div class="ig-header">
+              <div class="ig-avatar" id="igAvatarMobile">MV</div>
+              <div>
+                <div class="ig-handle">
+                  <span class="ig-handle-name">@vendacomcriativos</span>
+                  <span class="ig-verified">
+                    <svg viewBox="0 0 24 24" fill="#0095f6"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5l-4-4 1.41-1.41L10 13.67l6.59-6.59L18 8.5l-8 8z"/></svg>
+                  </span>
+                </div>
+                <div class="ig-name-sub">MV – Venda com Criativos</div>
+              </div>
+            </div>
+            <div class="ig-stats">
+              <div class="ig-stat">
+                <div class="ig-stat-num">84</div>
+                <div class="ig-stat-label">posts</div>
+              </div>
+              <div class="ig-stat">
+                <div class="ig-stat-num">9.704</div>
+                <div class="ig-stat-label">seguidores</div>
+              </div>
+              <div class="ig-stat">
+                <div class="ig-stat-num">+80M</div>
+                <div class="ig-stat-label">vendidos</div>
+              </div>
+            </div>
+            <div class="ig-bio">
+              Criativos que vendem por você em até 24h<br>
+              <strong>+80M vendidos</strong> no mercado digital
+            </div>
+            <div class="ig-posts" style="margin-top:12px;">
+              <div class="ig-post">
+                <img src="print1.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+                <div class="ig-reel-views">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  64,3 mil
+                </div>
+              </div>
+              <div class="ig-post">
+                <img src="print2.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+                <div class="ig-reel-views">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  385 mil
+                </div>
+              </div>
+              <div class="ig-post">
+                <img src="print3.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+                <div class="ig-reel-views">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  366 mil
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="creator-brands" style="margin: 16px 0 24px;">
           <span class="brand-chip">Infoprodutos</span>
           <span class="brand-chip">Dropshipping</span>
@@ -1734,7 +1797,7 @@
           Cada arquivo aqui foi testado e aprovado. O que não performou, ficou de fora. O que ficou, é o que facilita a vida da equipe de produção.
         </p>
       </div>
-      <div class="creator-photo">
+      <div class="creator-photo creator-photo-desktop">
         <div class="ig-card">
             <div class="ig-header">
               <div class="ig-avatar" id="igAvatar">MV</div>
