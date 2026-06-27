@@ -1003,6 +1003,11 @@
     .guarantee-icon svg { width: 16px; height: 16px; stroke: var(--p1); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .guarantee-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
     .guarantee-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+    @media(max-width:768px) {
+      .offer-guarantees { grid-template-columns: 1fr; gap: 10px; }
+      .guarantee-item { display: flex; align-items: center; text-align: left; gap: 14px; }
+      .guarantee-icon { margin: 0; flex-shrink: 0; }
+    }
 
     /* ── FAQ ── */
     .faq-list { margin-top: 48px; display: flex; flex-direction: column; gap: 10px; }
