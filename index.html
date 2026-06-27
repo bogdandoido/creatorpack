@@ -2089,8 +2089,9 @@
     // Scroll to real first card on load
     requestAnimationFrame(() => {
       const a = allCards();
-      a[1].scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
-      a[1].classList.add('active');
+      const firstReal = a[1];
+      track.scrollLeft = firstReal.offsetLeft - (track.clientWidth - firstReal.offsetWidth) / 2;
+      firstReal.classList.add('active');
     });
 
     let isSnapping = false;
