@@ -687,6 +687,24 @@
     .bonus-secret-title { font-size: 15px; font-weight: 700; color: var(--p3); margin-bottom: 4px; }
     .bonus-secret-desc { font-size: 13px; color: var(--text2); }
     @media(max-width:600px){ .bonus-grid { grid-template-columns: 1fr; } }
+    .bonus-tags-row {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .bonus-tag-slim {
+      background: rgba(155,127,255,0.08);
+      border: 1px solid rgba(155,127,255,0.2);
+      border-radius: 14px;
+      padding: 18px 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--p3);
+      letter-spacing: -0.01em;
+      line-height: 1.5;
+    }
     @media(min-width:601px){ .bonus-wide { grid-column: 1 / -1; } }
     .bonus-perks {
       display: flex;
@@ -1596,49 +1614,21 @@
       <div class="value-row">
         <div class="value-item">
           <div class="value-item-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg></div>
-          Pack de Backgrounds
+          Backgrounds + Trilhas + Efeitos Sonoros
         </div>
-        <div class="value-price">R$ 27</div>
-      </div>
-      <div class="value-row">
-        <div class="value-item">
-          <div class="value-item-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-          Pack de Trilhas + Instrumentais
-        </div>
-        <div class="value-price">R$ 47</div>
-      </div>
-      <div class="value-row">
-        <div class="value-item">
-          <div class="value-item-icon"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
-          Pack de Efeitos Sonoros
-        </div>
-        <div class="value-price">R$ 24</div>
-      </div>
-      <div class="value-row">
-        <div class="value-item">
-          <div class="value-item-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></div>
-          Pack de Bordas
-        </div>
-        <div class="value-price">R$ 17</div>
-      </div>
-      <div class="value-row">
-        <div class="value-item">
-          <div class="value-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></div>
-          Logos prontas pra usar
-        </div>
-        <div class="value-price">R$ 14</div>
+        <div class="value-price">R$ 98</div>
       </div>
       <div class="value-row">
         <div class="value-item">
           <div class="value-item-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg></div>
-          Pack de Texturas
+          Bordas + Logos + Texturas
         </div>
-        <div class="value-price">R$ 14</div>
+        <div class="value-price">R$ 45</div>
       </div>
       <div class="value-row">
         <div class="value-item">
           <div class="value-item-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-          Bônus Secreto
+          Bônus + LUTs Exclusivos
         </div>
         <div class="value-price">R$ 37</div>
       </div>
@@ -1660,34 +1650,12 @@
     <div class="center">
       <p class="t-label section-eye reveal">Ah, e mais uma coisa</p>
       <h2 class="t-title section-title reveal">Se ainda não é<br><span class="grad-text">o suficiente...</span></h2>
-      <p class="t-body reveal" style="margin: 0 auto;">Além dos 500+ arquivos, você ainda recebe uma pasta de bônus com materiais que a gente não divulga por completo aqui.</p>
     </div>
     <div class="bonus-grid" data-stagger>
-      <div class="bonus-item glass glass-hover">
-        <div class="bonus-item-icon">
-          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        </div>
-        <div class="bonus-item-title">Instrumentais Exclusivos</div>
-        <div class="bonus-item-desc">Trilhas que você não acha em nenhum pack gratuito — separadas e prontas pra usar.</div>
-      </div>
-      <div class="bonus-item glass glass-hover">
-        <div class="bonus-item-icon">
-          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        </div>
-        <div class="bonus-item-title">Efeitos que ninguém tem</div>
-        <div class="bonus-item-desc">Não os genéricos que aparecem em todo vídeo de 2021. Esses você não acha no Google.</div>
-      </div>
-      <div class="bonus-item glass glass-hover bonus-wide">
-        <div class="bonus-item-icon">
-          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        </div>
-        <div class="bonus-item-title">Descontos Exclusivos no Ecossistema MV</div>
-        <div class="bonus-item-desc" style="margin-bottom:16px">Quem tem o pack entra na fila preferencial de ofertas e lançamentos da Venda com Criativos.</div>
-        <div class="bonus-perks">
-          <div class="bonus-perk"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cupons exclusivos para o HooksLab</div>
-          <div class="bonus-perk"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Desconto em pacotes de criativos da MV</div>
-          <div class="bonus-perk"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Cupons para qualquer ferramenta lançada pelo ecossistema MV</div>
-        </div>
+      <div class="bonus-tags-row">
+        <div class="bonus-tag-slim">Instrumental<br>Exclusivo</div>
+        <div class="bonus-tag-slim">Efeitos<br>Premium</div>
+        <div class="bonus-tag-slim">Descontos no<br>Ecossistema MV</div>
       </div>
       <div class="bonus-secret">
         <div class="bonus-secret-lock">
@@ -1702,25 +1670,6 @@
   </div>
 </section>
 
-<!-- COMPAT -->
-<section class="compat">
-  <div class="wrap">
-    <div class="center">
-      <p class="t-label section-eye reveal">Onde usar</p>
-      <h2 class="t-title section-title reveal">Funciona onde<br><span class="grad-text">você já trabalha.</span></h2>
-    </div>
-    <div class="compat-pills" data-stagger>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>CapCut</div>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Premiere Pro</div>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72"/></svg>After Effects</div>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>DaVinci Resolve</div>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>Instagram</div>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>TikTok</div>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>YouTube</div>
-      <div class="compat-pill"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Shorts</div>
-    </div>
-  </div>
-</section>
 
 <!-- CREATOR -->
 <section>
@@ -1973,6 +1922,13 @@
           <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
         </button>
         <div class="faq-body"><div class="faq-body-inner">Em <strong>menos de 5 minutos</strong> você recebe o link do Google Drive por e-mail. Clica, baixa e começa a usar.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="faq(this)">
+          Funciona no meu editor?
+          <div class="faq-chevron"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="faq-body"><div class="faq-body-inner">Se você usa <strong>CapCut, Premiere, After Effects ou DaVinci</strong> — sim. Os arquivos são em formatos universais (PNG, MP3, MP4). Você importa, arrasta e usa. Sem instalar nada.</div></div>
       </div>
       <div class="faq-item">
         <button class="faq-btn" onclick="faq(this)">
