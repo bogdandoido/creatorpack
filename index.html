@@ -2156,6 +2156,11 @@
     function allCards() { return Array.from(track.querySelectorAll('.carousel-card')); }
     function realOnly() { return allCards().filter(c => !c.dataset.clone); }
 
+    function scrollToCard(card) {
+      track.scrollLeft = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
+    }
+
+
     // Scroll to real first card on load
     requestAnimationFrame(() => {
       const a = allCards();
@@ -2185,7 +2190,7 @@
         setTimeout(() => {
           const a2 = allCards();
           const target = toFirst ? a2[1] : a2[a2.length - 2];
-          target.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
+          scrollToCard(target);
           a2.forEach(c => c.classList.remove('active'));
           target.classList.add('active');
           isSnapping = false;
@@ -2206,7 +2211,7 @@
       if (rIdx === 0 && dir === -1) target = a[0];
       else if (rIdx === r.length - 1 && dir === 1) target = a[a.length - 1];
       else target = a[nextRIdx + 1];
-      target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      scrollToCard(target);
     };
 
     // Drag
@@ -2357,7 +2362,7 @@
     else if (rIdx === r.length - 1 && dir === 1) scrollTarget = a[a.length - 1];
     else scrollTarget = a[nextRIdx + 1];
     pauseAllWistia();
-    scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    scrollToCard(scrollTarget);
     if (scrollTarget.dataset.clone) {
       setTimeout(function() { playWistiaInCard(r[nextRIdx]); }, 700);
     } else {
