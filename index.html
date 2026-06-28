@@ -1488,42 +1488,32 @@
       </div>
 
       <div class="carousel-card">
-        <div class="carousel-video">
-          <script src="https://fast.wistia.com/embed/emz7yxsby4.js" async type="module"></script>
-          <style>wistia-player[media-id='emz7yxsby4']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/emz7yxsby4/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="emz7yxsby4" aspect="0.5625" options='{"plugin":{"captions-v1":{"onByDefault":false}}}' ></wistia-player>
+        <div class="carousel-video wistia-lazy" data-mid="emz7yxsby4">
+          <div class="wistia-swatch" style="background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/emz7yxsby4/swatch');padding-top:177.78%;filter:blur(5px);"></div>
         </div>
       </div>
 
       <div class="carousel-card">
-        <div class="carousel-video">
-          <script src="https://fast.wistia.com/embed/omkkwarbw0.js" async type="module"></script>
-          <style>wistia-player[media-id='omkkwarbw0']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/omkkwarbw0/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="omkkwarbw0" aspect="0.5625" options='{"plugin":{"captions-v1":{"onByDefault":false}}}' ></wistia-player>
+        <div class="carousel-video wistia-lazy" data-mid="omkkwarbw0">
+          <div class="wistia-swatch" style="background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/omkkwarbw0/swatch');padding-top:177.78%;filter:blur(5px);"></div>
         </div>
       </div>
 
       <div class="carousel-card">
-        <div class="carousel-video">
-          <script src="https://fast.wistia.com/embed/4c4wcbfl94.js" async type="module"></script>
-          <style>wistia-player[media-id='4c4wcbfl94']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/4c4wcbfl94/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="4c4wcbfl94" aspect="0.5625" options='{"plugin":{"captions-v1":{"onByDefault":false}}}' ></wistia-player>
+        <div class="carousel-video wistia-lazy" data-mid="4c4wcbfl94">
+          <div class="wistia-swatch" style="background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/4c4wcbfl94/swatch');padding-top:177.78%;filter:blur(5px);"></div>
         </div>
       </div>
 
       <div class="carousel-card">
-        <div class="carousel-video">
-          <script src="https://fast.wistia.com/embed/dymj5l950u.js" async type="module"></script>
-          <style>wistia-player[media-id='dymj5l950u']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/dymj5l950u/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="dymj5l950u" aspect="0.5625" options='{"plugin":{"captions-v1":{"onByDefault":false}}}' ></wistia-player>
+        <div class="carousel-video wistia-lazy" data-mid="dymj5l950u">
+          <div class="wistia-swatch" style="background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/dymj5l950u/swatch');padding-top:177.78%;filter:blur(5px);"></div>
         </div>
       </div>
 
       <div class="carousel-card">
-        <div class="carousel-video">
-          <script src="https://fast.wistia.com/embed/sdruh466ms.js" async type="module"></script>
-          <style>wistia-player[media-id='sdruh466ms']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/sdruh466ms/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="sdruh466ms" aspect="0.5625" options='{"plugin":{"captions-v1":{"onByDefault":false}}}' ></wistia-player>
+        <div class="carousel-video wistia-lazy" data-mid="sdruh466ms">
+          <div class="wistia-swatch" style="background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/sdruh466ms/swatch');padding-top:177.78%;filter:blur(5px);"></div>
         </div>
       </div>
 
@@ -2128,10 +2118,12 @@
       if (typeof updateCarouselButtons === 'function') {
         updateCarouselButtons(activeIdx, cards.length);
       }
-      // Play video do card ativo após scroll parar
+      // Lazy-load + play após scroll parar
       if (showcaseVisible) {
         clearTimeout(scrollSettleTimer);
-        scrollSettleTimer = setTimeout(function(){ playActiveCard(false); }, 450);
+        scrollSettleTimer = setTimeout(function(){
+          loadWistiaCard(closest, function() { playActiveCard(false); });
+        }, 450);
       }
     }
 
@@ -2290,6 +2282,33 @@
     }
   }, true);
 
+  // Lazy-load Wistia player quando card fica ativo
+  function loadWistiaCard(card, callback) {
+    var lazy = card.querySelector('.wistia-lazy');
+    if (!lazy) { if (callback) callback(); return; } // já carregado
+    var mid = lazy.dataset.mid;
+    lazy.classList.remove('wistia-lazy');
+    lazy.innerHTML = '';
+    var s = document.createElement('script');
+    s.src = 'https://fast.wistia.com/embed/' + mid + '.js';
+    s.async = true;
+    s.type = 'module';
+    document.head.appendChild(s);
+    var player = document.createElement('wistia-player');
+    player.setAttribute('media-id', mid);
+    player.setAttribute('aspect', '0.5625');
+    player.setAttribute('options', '{"plugin":{"captions-v1":{"onByDefault":false}}}');
+    lazy.appendChild(player);
+    // aguarda player estar definido
+    var t = 0;
+    var poll = setInterval(function() {
+      if (customElements.get('wistia-player') || ++t > 20) {
+        clearInterval(poll);
+        if (callback) setTimeout(callback, 400);
+      }
+    }, 150);
+  }
+
   // Arrow: pause current, scroll, play next
   function updateCarouselButtons(rIdx, total) {
     var prev = document.getElementById('carouselPrev');
@@ -2307,8 +2326,10 @@
     if (nextIdx < 0 || nextIdx >= r.length) return;
     pauseAllWistia();
     scrollToCard(r[nextIdx]);
-    playWistiaInCard(r[nextIdx], true);
     updateCarouselButtons(nextIdx, r.length);
+    loadWistiaCard(r[nextIdx], function() { playWistiaInCard(r[nextIdx], true); });
+    // pré-carrega o próximo
+    if (r[nextIdx + dir]) loadWistiaCard(r[nextIdx + dir], null);
   };
 
   // Play ao entrar + pause ao sair do showcase
