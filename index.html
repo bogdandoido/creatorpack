@@ -2358,6 +2358,20 @@
 
   window.addEventListener('scroll', function() { userHasScrolled = true; }, { once: true, passive: true });
 
+  // Esconder botão "Clique para ativar o som" no shadow DOM do Wistia
+  // Roda a cada 800ms pois Wistia reconstrói o shadow após init
+  setInterval(function() {
+    document.querySelectorAll('wistia-player').forEach(function(player) {
+      if (!player.shadowRoot) return;
+      if (player.shadowRoot.querySelector('#mv-sound-hide')) return;
+      var s = document.createElement('style');
+      s.id = 'mv-sound-hide';
+      s.textContent = '.click-for-sound-btn{display:none!important}[class*="click-for-sound"]{display:none!important}';
+      player.shadowRoot.appendChild(s);
+    });
+  }, 800);
+
+
   // Qualquer toque desbloqueia audio no browser
   document.addEventListener('touchend', function unlockAudio() {
     audioUnlocked = true;
