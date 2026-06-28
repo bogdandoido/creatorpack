@@ -1487,7 +1487,7 @@
         <div class="carousel-video">
           <script src="https://fast.wistia.com/embed/o7r663ibrb.js" async type="module"></script>
           <style>wistia-player[media-id='o7r663ibrb']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/o7r663ibrb/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="o7r663ibrb" aspect="0.5625"></wistia-player>
+          <wistia-player cc-visible="false" muted="false" media-id="o7r663ibrb" aspect="0.5625"></wistia-player>
         </div>
       </div>
 
@@ -1495,7 +1495,7 @@
         <div class="carousel-video">
           <script src="https://fast.wistia.com/embed/emz7yxsby4.js" async type="module"></script>
           <style>wistia-player[media-id='emz7yxsby4']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/emz7yxsby4/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="emz7yxsby4" aspect="0.5625"></wistia-player>
+          <wistia-player cc-visible="false" muted="false" media-id="emz7yxsby4" aspect="0.5625"></wistia-player>
         </div>
       </div>
 
@@ -1503,7 +1503,7 @@
         <div class="carousel-video">
           <script src="https://fast.wistia.com/embed/omkkwarbw0.js" async type="module"></script>
           <style>wistia-player[media-id='omkkwarbw0']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/omkkwarbw0/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="omkkwarbw0" aspect="0.5625"></wistia-player>
+          <wistia-player cc-visible="false" muted="false" media-id="omkkwarbw0" aspect="0.5625"></wistia-player>
         </div>
       </div>
 
@@ -1511,7 +1511,7 @@
         <div class="carousel-video">
           <script src="https://fast.wistia.com/embed/4c4wcbfl94.js" async type="module"></script>
           <style>wistia-player[media-id='4c4wcbfl94']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/4c4wcbfl94/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="4c4wcbfl94" aspect="0.5625"></wistia-player>
+          <wistia-player cc-visible="false" muted="false" media-id="4c4wcbfl94" aspect="0.5625"></wistia-player>
         </div>
       </div>
 
@@ -1519,7 +1519,7 @@
         <div class="carousel-video">
           <script src="https://fast.wistia.com/embed/dymj5l950u.js" async type="module"></script>
           <style>wistia-player[media-id='dymj5l950u']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/dymj5l950u/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="dymj5l950u" aspect="0.5625"></wistia-player>
+          <wistia-player cc-visible="false" muted="false" media-id="dymj5l950u" aspect="0.5625"></wistia-player>
         </div>
       </div>
 
@@ -1527,7 +1527,7 @@
         <div class="carousel-video">
           <script src="https://fast.wistia.com/embed/sdruh466ms.js" async type="module"></script>
           <style>wistia-player[media-id='sdruh466ms']:not(:defined){background:center/contain no-repeat url('https://fast.wistia.com/embed/medias/sdruh466ms/swatch');display:block;filter:blur(5px);padding-top:177.78%;}</style>
-          <wistia-player media-id="sdruh466ms" aspect="0.5625"></wistia-player>
+          <wistia-player cc-visible="false" muted="false" media-id="sdruh466ms" aspect="0.5625"></wistia-player>
         </div>
       </div>
 
@@ -2298,7 +2298,10 @@
 
   function pauseAllWistia() {
     getAllWistiaPlayers().forEach(function(el) {
-      try { if (typeof el.pause === 'function') el.pause(); } catch(e) {}
+      try {
+        if (typeof el.muted !== 'undefined') el.muted = true;
+        if (typeof el.pause === 'function') el.pause();
+      } catch(e) {}
     });
   }
 
@@ -2306,7 +2309,12 @@
     pauseAllWistia();
     var el = card.querySelector('wistia-player');
     if (el) setTimeout(function() {
-      try { if (typeof el.play === 'function') el.play(); } catch(e) {}
+      try {
+        if (typeof el.muted !== 'undefined') el.muted = false;
+        if (typeof el.volume !== 'undefined') el.volume = 1;
+        if (typeof el.ccVisible !== 'undefined') el.ccVisible = false;
+        if (typeof el.play === 'function') el.play();
+      } catch(e) {}
     }, 350);
   }
 
