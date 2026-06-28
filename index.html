@@ -1206,7 +1206,8 @@
       -webkit-tap-highlight-color: transparent;
       flex-shrink: 0;
     }
-    .carousel-btn:hover { background: var(--surface2); border-color: var(--border2); }
+    .carousel-btn:hover:not(:disabled) { background: var(--surface2); border-color: var(--border2); }
+    .carousel-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 
     /* ── SHIMMER BTN ── */
     .btn-fill { position: relative; overflow: hidden; }
@@ -1530,10 +1531,10 @@
   </div>
   </div>
   <div class="carousel-nav">
-    <button class="carousel-btn" onclick="moveCarousel(-1)">
+    <button id="carouselPrev" class="carousel-btn" onclick="moveCarousel(-1)" disabled>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
-    <button class="carousel-btn" onclick="moveCarousel(1)">
+    <button id="carouselNext" class="carousel-btn" onclick="moveCarousel(1)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
@@ -2153,6 +2154,12 @@
         }, 300);
         return;
       }
+      // Atualiza estado das setas
+      const rOnly = realOnly();
+      const activeIdx = rOnly.indexOf(closest);
+      if (activeIdx >= 0 && typeof updateCarouselButtons === 'function') {
+        updateCarouselButtons(activeIdx, rOnly.length);
+      }
       // Play video do card ativo após scroll parar
       if (showcaseVisible) {
         clearTimeout(scrollSettleTimer);
@@ -2330,24 +2337,24 @@
   }, true);
 
   // Arrow: pause current, scroll, play next
+  function updateCarouselButtons(rIdx, total) {
+    var prev = document.getElementById('carouselPrev');
+    var next = document.getElementById('carouselNext');
+    if (prev) prev.disabled = rIdx <= 0;
+    if (next) next.disabled = rIdx >= total - 1;
+  }
+
   window.moveCarousel = function(dir) {
     var track = document.getElementById('carouselTrack');
-    var a = Array.from(track.querySelectorAll('.carousel-card'));
-    var r = a.filter(function(c) { return !c.dataset.clone; });
-    var activeReal = a.find(function(c) { return c.classList.contains('active') && !c.dataset.clone; }) || r[0];
+    var r = Array.from(track.querySelectorAll('.carousel-card')).filter(function(c) { return !c.dataset.clone; });
+    var activeReal = r.find(function(c) { return c.classList.contains('active'); }) || r[0];
     var rIdx = r.indexOf(activeReal);
-    var nextRIdx = (rIdx + dir + r.length) % r.length;
-    var scrollTarget;
-    if (rIdx === 0 && dir === -1) scrollTarget = a[0];
-    else if (rIdx === r.length - 1 && dir === 1) scrollTarget = a[a.length - 1];
-    else scrollTarget = a[nextRIdx + 1];
+    var nextIdx = rIdx + dir;
+    if (nextIdx < 0 || nextIdx >= r.length) return;
     pauseAllWistia();
-    scrollToCard(scrollTarget);
-    if (scrollTarget.dataset.clone) {
-      setTimeout(function() { playWistiaInCard(r[nextRIdx], true); }, 700);
-    } else {
-      playWistiaInCard(scrollTarget, true);
-    }
+    scrollToCard(r[nextIdx]);
+    playWistiaInCard(r[nextIdx], true);
+    updateCarouselButtons(nextIdx, r.length);
   };
 
   // Play ao entrar + pause ao sair do showcase
@@ -2366,7 +2373,7 @@
       if (player.shadowRoot.querySelector('#mv-sound-hide')) return;
       var s = document.createElement('style');
       s.id = 'mv-sound-hide';
-      s.textContent = '.click-for-sound-btn{display:none!important}[class*="click-for-sound"]{display:none!important}';
+      s.textContent = '.click-for-sound-btn{display:none!important}[class*="click-for-sound"]{display:none!important}.w-chapter-title{display:none!important}[class*="chapter-title"]{display:none!important}.w-captions{display:none!important}[class*="w-caption"]{display:none!important}.w-vulcan-v2-caption-track{display:none!important}';
       player.shadowRoot.appendChild(s);
     });
   }, 800);
