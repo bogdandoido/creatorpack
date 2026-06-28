@@ -2112,6 +2112,7 @@
     function scrollToCard(card) {
       track.scrollLeft = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
     }
+    window.scrollToCard = scrollToCard;
 
 
     // Scroll to real first card on load
