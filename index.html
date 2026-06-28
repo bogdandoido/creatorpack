@@ -2097,68 +2097,36 @@
     const track = document.getElementById('carouselTrack');
     if (!track) return;
 
-    // Clone first & last for infinite peek
-    const realCards = Array.from(track.querySelectorAll('.carousel-card'));
-    if (!realCards.length) return;
-    const lcClone = realCards[realCards.length - 1].cloneNode(true);
-    lcClone.dataset.clone = 'last';
-    track.insertBefore(lcClone, track.firstChild);
-    const fcClone = realCards[0].cloneNode(true);
-    fcClone.dataset.clone = 'first';
-    track.appendChild(fcClone);
-
-    function allCards() { return Array.from(track.querySelectorAll('.carousel-card')); }
-    function realOnly() { return allCards().filter(c => !c.dataset.clone); }
+    const cards = Array.from(track.querySelectorAll('.carousel-card'));
+    if (!cards.length) return;
 
     function scrollToCard(card) {
       track.scrollLeft = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
     }
     window.scrollToCard = scrollToCard;
 
-
-    // Scroll to real first card on load
+    // Scroll to first card on load
     requestAnimationFrame(() => {
-      const a = allCards();
-      const firstReal = a[1];
-      track.scrollLeft = firstReal.offsetLeft - (track.clientWidth - firstReal.offsetWidth) / 2;
-      firstReal.classList.add('active');
+      scrollToCard(cards[0]);
+      cards[0].classList.add('active');
     });
 
-    let isSnapping = false;
     let scrollSettleTimer = null;
 
     function updateActive() {
-      if (isSnapping) return;
-      const a = allCards();
       const center = track.scrollLeft + track.clientWidth / 2;
       let closest = null, minDist = Infinity;
-      a.forEach(c => {
+      cards.forEach(c => {
         const d = Math.abs((c.offsetLeft + c.offsetWidth / 2) - center);
         if (d < minDist) { minDist = d; closest = c; }
       });
-      a.forEach(c => c.classList.remove('active'));
+      cards.forEach(c => c.classList.remove('active'));
       if (!closest) return;
       closest.classList.add('active');
-      // Snap back when landing on clone
-      if (closest.dataset.clone) {
-        isSnapping = true;
-        const toFirst = closest.dataset.clone === 'first';
-        setTimeout(() => {
-          const a2 = allCards();
-          const target = toFirst ? a2[1] : a2[a2.length - 2];
-          scrollToCard(target);
-          a2.forEach(c => c.classList.remove('active'));
-          target.classList.add('active');
-          isSnapping = false;
-          if (showcaseVisible) playActiveCard(false);
-        }, 300);
-        return;
-      }
       // Atualiza estado das setas
-      const rOnly = realOnly();
-      const activeIdx = rOnly.indexOf(closest);
-      if (activeIdx >= 0 && typeof updateCarouselButtons === 'function') {
-        updateCarouselButtons(activeIdx, rOnly.length);
+      const activeIdx = cards.indexOf(closest);
+      if (typeof updateCarouselButtons === 'function') {
+        updateCarouselButtons(activeIdx, cards.length);
       }
       // Play video do card ativo após scroll parar
       if (showcaseVisible) {
@@ -2168,25 +2136,11 @@
     }
 
     function playActiveCard(withSound) {
-      var active = track.querySelector('.carousel-card.active:not([data-clone])');
+      var active = track.querySelector('.carousel-card.active');
       if (active) playWistiaInCard(active, withSound);
     }
 
     track.addEventListener('scroll', updateActive, { passive: true });
-
-    // Fallback moveCarousel (overridden by Wistia section below)
-    window.moveCarousel = function(dir) {
-      const a = allCards();
-      const r = realOnly();
-      const activeReal = a.find(c => c.classList.contains('active') && !c.dataset.clone) || r[0];
-      const rIdx = r.indexOf(activeReal);
-      const nextRIdx = (rIdx + dir + r.length) % r.length;
-      let target;
-      if (rIdx === 0 && dir === -1) target = a[0];
-      else if (rIdx === r.length - 1 && dir === 1) target = a[a.length - 1];
-      else target = a[nextRIdx + 1];
-      scrollToCard(target);
-    };
 
     // Drag
     let isDown = false, startX, sl;
@@ -2346,7 +2300,7 @@
 
   window.moveCarousel = function(dir) {
     var track = document.getElementById('carouselTrack');
-    var r = Array.from(track.querySelectorAll('.carousel-card')).filter(function(c) { return !c.dataset.clone; });
+    var r = Array.from(track.querySelectorAll('.carousel-card'));
     var activeReal = r.find(function(c) { return c.classList.contains('active'); }) || r[0];
     var rIdx = r.indexOf(activeReal);
     var nextIdx = rIdx + dir;
